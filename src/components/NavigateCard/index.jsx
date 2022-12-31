@@ -1,14 +1,17 @@
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_APIKEY } from '@env';
-import { useDispatch } from 'react-redux';
-import { setDestination } from '../../slices/navSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectDestination, setDestination } from '../../slices/navSlice';
 import { useNavigation } from '@react-navigation/native';
+import { NavFavorites } from '../NavFavorites';
+import { Icon } from 'react-native-elements';
 
 export const NavigateCard = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
+    const destination = useSelector(selectDestination);
 
     return (
         <SafeAreaView className="bg-white flex-1">
@@ -54,6 +57,22 @@ export const NavigateCard = () => {
                         debounce={400}
                     />
                 </View>
+                <NavFavorites />
+            </View>
+            <View className="flex-row bg-white justify-evenly py-2 mt-auto border-t border-gray-100">
+                <TouchableOpacity
+                    disabled={!destination}
+                    className={
+                        'flex flex-row justify-between bg-black w-24 px-4 py-3 rounded-full ' + (!destination && 'bg-gray-300')
+                    }
+                    onPress={() => navigation.navigate('RideOptionsCard')}>
+                    <Icon class name="car" type="font-awesome" color="white" size={16} />
+                    <Text className="text-white text-center">Rides</Text>
+                </TouchableOpacity>
+                <TouchableOpacity className="flex flex-row w-24 px-4 py-3 rounded-full justify-between" disabled={true}>
+                    <Icon name="fast-food-outline" type="ionicon" color="black" size={16} />
+                    <Text className="text-center">Eats</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
